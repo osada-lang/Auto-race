@@ -7,14 +7,17 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-      node: 20 # シンプルな指定に変更しました
+      node: 20
       xcode: latest
       cocoapods: default
     scripts:
       - name: Install dependencies
         script: npm install
       - name: Sync Capacitor
-        script: npx cap sync ios
+        script: |
+          # 実行権限を与えてから同期を実行します
+          chmod +x node_modules/.bin/cap
+          npx cap sync ios
       - name: CocoaPods installation
         script: |
           cd ios/App
