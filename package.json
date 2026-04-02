@@ -1,0 +1,14 @@
+{
+  "name": "auto-race-roulette",
+  "version": "1.1.0",
+  "description": "Premium Auto Race Roulette App with Sound Assets",
+  "main": "app.js",
+  "author": "Antigravity",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^8.0.2"
+  }
+}

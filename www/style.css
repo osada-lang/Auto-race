@@ -1,0 +1,859 @@
+/*==========================================
+   Base Settings & Variables
+==========================================*/
+:root {
+  --color-dark: #05050a;
+  --color-gold: #ffd700;
+  --color-gold-dark: #b8860b;
+  --color-neon-blue: #00f3ff;
+  --color-neon-pink: #ff00ff;
+  --color-text: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  background-color: var(--color-dark);
+  color: var(--color-text);
+  font-family: 'Noto Sans JP', sans-serif;
+  overflow: hidden; /* スマホアプリ向けにスクロール禁止 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* 確定フラッシュ演出レイヤー */
+.white-flash {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ffffff;
+  z-index: 9999;
+  pointer-events: none; /* タップの邪魔をしない */
+}
+
+.flash-out {
+  animation: flashOutAnim 2s forwards;
+}
+
+.impact-flash-anim {
+  animation: impactFlashAnim 0.3s ease-out forwards;
+}
+
+@keyframes impactFlashAnim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes flashOutAnim {
+  0%   { opacity: 1; }
+  10%  { opacity: 0; }
+  20%  { opacity: 1; }
+  30%  { opacity: 0; }
+  40%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.flash-three-times {
+  animation: flashThreeTimesAnim 1.2s ease-out forwards;
+}
+
+@keyframes flashThreeTimesAnim {
+  0% { opacity: 0; background-color: #ffffff; }
+  10% { opacity: 1; }
+  33% { opacity: 0; }
+  43% { opacity: 1; }
+  66% { opacity: 0; }
+  76% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 背景演出（パチンコ風のフラッシュやパーティクル用） */
+.bg-effect {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('Gemini_Generated_Image_luvmqsluvmqsluvm.png') center/cover no-repeat;
+  z-index: -2;
+}
+/* 背景画像を少し暗くして文字を読みやすくするオーバーレイ */
+.bg-effect::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 5, 10, 0.7);
+}
+.bg-flash::after {
+  animation: bgFlashOverlay 0.3s infinite alternate;
+}
+
+/* アプリケーション全体コンテナ */
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  height: 100%;
+  max-height: 900px; /* 少し高さを許容 */
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* 画面切り替えクラス */
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 40px 20px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
+}
+
+/* タイトル・テキスト系 */
+.flash-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.5rem;
+  color: var(--color-gold);
+  text-shadow: 0 0 10px var(--color-gold), 0 0 20px var(--color-gold-dark);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.jp-title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: 2.3rem;
+  letter-spacing: 2px;
+}
+
+.catchphrase {
+  font-size: 1.1rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #FFDF70 0%, #ffffff 50%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 5px;
+  letter-spacing: 2px;
+  text-align: center;
+  filter: drop-shadow(0 0 5px rgba(255, 223, 112, 0.5));
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #cccccc;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* ゴージャスなボタン */
+.btn-gorgeous {
+  background: linear-gradient(135deg, #FFDF70 0%, #D4AF37 50%, #996515 100%);
+  border: 2px solid #FFE58F;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #2b1f00;
+  font-weight: 900;
+  padding: 12px 30px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 10px;
+  transition: all 0.2s ease;
+  min-width: 160px;
+  flex: 1;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.btn-sub {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-bottom: 2px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.btn-text {
+  font-size: 1.3rem;
+}
+.btn-gorgeous:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  flex-wrap: wrap; /* 折り返しを許可 */
+}
+.button-group.vertical {
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-back {
+  background: transparent;
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  padding: 10px 30px;
+  border-radius: 30px;
+  margin-top: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* スクロールエリア（カードリスト） */
+.scroll-container {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-container::-webkit-scrollbar {
+  width: 5px;
+}
+.scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 10px;
+}
+
+/* 券種カード */
+.bet-card {
+  background: rgba(15, 15, 25, 0.9);
+  border: 2px solid #D4AF37;
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.bet-card:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 15px var(--color-gold);
+}
+.bet-card-header {
+  background: linear-gradient(135deg, #FFDF70 0%, #D4AF37 50%, #996515 100%);
+  color: #2b1f00;
+  font-size: 1.3rem;
+  font-weight: 900;
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+.bet-card-body {
+  padding: 12px;
+  text-align: left;
+}
+.badge {
+  font-size: 0.8rem;
+  background: #2b1f00;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+}
+.stars {
+  color: #ffeb3b;
+  margin-left: 5px;
+  font-size: 0.7rem;
+}
+.desc-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 6px;
+  color: #ddd;
+}
+.desc-text:last-child {
+  margin-bottom: 0;
+}
+.highlight-blue {
+  color: #00f3ff;
+  font-weight: bold;
+}
+.highlight-red {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+/*==========================================
+   画面3: ルーレット＆演出アニメーション
+==========================================*/
+/* PUSHボタン */
+.push-btn-effect {
+  margin-top: 40px;
+  font-size: 1.8rem;
+  padding: 20px 40px;
+  background: linear-gradient(135deg, #ff0000 0%, #aa0000 100%);
+  color: #fff;
+  border: 3px solid #ffcccc;
+  border-radius: 50px;
+  box-shadow: 0 0 20px #ff0000, inset 0 0 10px #ffffff;
+  animation: pulsePush 0.5s infinite alternate;
+  cursor: pointer;
+  font-weight: 900;
+  text-shadow: 0 0 5px #000;
+  transition: all 0.2s ease;
+}
+.push-btn-effect:active {
+  transform: scale(0.9);
+  box-shadow: 0 0 10px #ff0000;
+}
+@keyframes pulsePush {
+  0% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
+  100% { transform: scale(1.1); box-shadow: 0 0 50px #ff0000, 0 0 20px #ffff00; }
+}
+.roulette-container, .result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* centerからflex-startへ: 上下のガタつきを抑える */
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+}
+
+/* レイアウトを固定するためのゾーン設定 */
+.fever-zone {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.slot-zone {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.action-zone {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.result-box-wrapper {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.disclaimer-wrapper {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.result-actions {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* リーチテロップ・激アツ */
+.fever-text {
+  font-size: 3rem; /* 4remから3remに縮小 */
+  font-weight: 900;
+  color: #ff0000;
+  text-shadow: 0 0 20px #ff0000, 0 0 40px #ff6600, 0 0 60px #ffff00;
+  opacity: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.fever-text.mirai-mode {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  animation: miraiAnim 2.5s ease-in-out forwards !important;
+}
+
+/* バイクのアニメーションエリア */
+.bike-animation-area {
+  width: 100%;
+  height: 200px; /* 下に余白ができすぎないように高さを絞る */
+  position: relative;
+  overflow: hidden;
+  margin: 10px 0;
+  border-top: 2px dashed rgba(255, 255, 255, 0.4);
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.4);
+}
+
+.bike-img {
+  position: absolute;
+  height: 140px;
+  width: auto;
+  left: 150%;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7)); 
+  will-change: left, transform;
+}
+
+/* 各バイクの上下位置と重なり順（画面下部に寄せて余白を埋める） */
+.bike-1 { top: 35%; z-index: 1; }
+.bike-2 { top: 65%; z-index: 2; height: 180px; } 
+.bike-3 { top: 85%; z-index: 3; height: 130px; }
+
+/* スロット風数字の表示箱 */
+.slot-numbers {
+  font-size: 5rem;
+  font-family: 'Orbitron', sans-serif;
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 20px var(--color-neon-blue);
+  display: flex;
+  gap: 15px;
+}
+
+.slot {
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid var(--color-neon-blue);
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: inset 0 0 20px var(--color-neon-blue);
+}
+
+.slot-item {
+  width: 70px;
+  height: 90px;
+  font-size: 3.5rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 4px solid #333;
+  color: #000;
+  text-shadow: 1px 1px 0px #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  transition: none; /* 高速描画用 */
+}
+
+/* 確定演出の特別タイトル文字 */
+.result-title {
+  font-family: 'Noto Serif JP', serif; /* 明朝体で高級感を演出 */
+  font-size: 4.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  letter-spacing: 12px;
+  margin-right: -12px; /* 端の余白調整 */
+  
+  /* 最高級のゴールドグラデーション */
+  background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 25%,
+    #b38728 50%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* タイトルの初期状態を非表示に */
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* クラス付与でアニメーション開始 */
+.result-title.show {
+  opacity: 1;
+  pointer-events: auto;
+  animation: 
+    premiumReveal 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+    goldShine 5s linear 1.8s infinite;
+}
+
+@keyframes premiumReveal {
+  0% { opacity: 0; transform: scale(1.3) translateY(20px); filter: blur(10px) brightness(2); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px) brightness(1) drop-shadow(3px 8px 4px rgba(0,0,0,0.8)) drop-shadow(0 0 25px rgba(252, 246, 186, 0.4)); }
+}
+
+@keyframes goldShine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 結果表示 */
+.result-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.result-number-item {
+  width: 70px;
+  height: 90px;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #000;
+  font-size: 3.5rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 4px solid #333;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 -5px 10px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 0px #fff;
+  opacity: 0;
+  transform: scale(3);
+  position: relative;
+}
+
+.result-number-item.pop-in {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.result-label {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  text-shadow: 0 0 5px #000, 0 0 10px #000;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+.result-message {
+  font-size: 0.9rem; /* 少し小さくして読みやすく */
+  color: #aaaaaa;
+  text-align: center;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.fade-in-anim {
+  animation: fadeInMessage 1s ease forwards;
+}
+
+@keyframes fadeInMessage {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* レースの車番カラー */
+.color-1 { background: radial-gradient(circle, #ffffff 0%, #e0e0e0 100%); border-color: #999; } /* 白 */
+.color-2 { background: radial-gradient(circle, #222222 0%, #000000 100%); color: #fff; border-color: #555; text-shadow: none; } /* 黒 */
+.color-3 { background: radial-gradient(circle, #ff6666 0%, #ff0000 100%); border-color: #900; } /* 赤 */
+.color-4 { background: radial-gradient(circle, #66b2ff 0%, #0066cc 100%); border-color: #003380; } /* 青 */
+.color-5 { background: radial-gradient(circle, #ffff66 0%, #ffcc00 100%); border-color: #b38f00; } /* 黄 */
+.color-6 { background: radial-gradient(circle, #66ff66 0%, #009900 100%); border-color: #004d00; } /* 緑 */
+.color-7 { background: radial-gradient(circle, #ffb366 0%, #ff6600 100%); border-color: #993d00; } /* 橙 */
+.color-8 { background: radial-gradient(circle, #ff66b2 0%, #ff007f 100%); border-color: #99004c; } /* 桃 */
+
+/* 車番間のハイフン */
+.result-hyphen {
+  font-size: 3rem;
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+/* アニメーション定義 */
+@keyframes bgFlashOverlay {
+  0% { background-color: rgba(5, 5, 10, 0.7); }
+  20% { background-color: rgba(150, 0, 0, 0.5); }
+  40% { background-color: rgba(0, 0, 150, 0.5); }
+  60% { background-color: rgba(150, 150, 0, 0.5); }
+  80% { background-color: rgba(150, 0, 150, 0.5); }
+  100% { background-color: rgba(5, 5, 10, 0.7); }
+}
+
+@keyframes flashFever {
+  0% { opacity: 0; transform: scale(0.5); }
+  10% { opacity: 1; transform: scale(1.5); }
+  20% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+@keyframes dashBikeRace {
+  0% { left: 150%; transform: translateY(-50%) rotate(5deg); }
+  100% { left: -50%; transform: translateY(-50%) rotate(-5deg); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(5); filter: brightness(5) blur(10px); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0px); }
+}
+
+@keyframes miraiAnim {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); filter: blur(10px); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); filter: blur(0); }
+  75% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); filter: blur(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); filter: blur(20px); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.rainbow-text {
+  background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbowHue 2s linear infinite;
+}
+
+@keyframes rainbowHue {
+  to { filter: hue-rotate(360deg); }
+}
+
+/* 解説用カード */
+.info-card {
+  background: rgba(15, 15, 25, 0.8);
+  border-left: 5px solid var(--color-gold);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 100%;
+}
+.info-card h3 {
+  color: var(--color-gold);
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.info-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #eee;
+}
+
+/* レインボーボタン (WINTICKET 用) */
+.rainbow-btn {
+  background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd1de8, #dd1de8);
+  background-size: 1800% 1800%;
+  animation: rainbowAnimation 18s ease infinite;
+  color: #fff !important;
+  border: none !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+@keyframes rainbowAnimation {
+  0%{background-position:0% 82%}
+  50%{background-position:100% 19%}
+  100%{background-position:0% 82%}
+}
+
+/* ヒーロー画像のデザイン */
+.hero-image-container {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+  filter: brightness(0.9);
+  transition: transform 0.3s ease;
+}
+.hero-image:hover {
+  transform: scale(1);
+}
+
+/* セクションタイトル */
+.section-title {
+  color: var(--color-gold);
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin: 30px 0 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 5px;
+}
+
+/* ハイライトカード */
+.info-card.highlight {
+  border-left-color: #ff2400;
+  background: rgba(40, 10, 10, 0.6);
+}
+
+/* 車券ガイドテーブル */
+.bet-guide-table {
+  background: rgba(15, 15, 25, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+.bet-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  font-size: 0.9rem;
+}
+.bet-row:last-child {
+  border-bottom: none;
+}
+.bet-row span:first-child {
+  color: var(--color-gold);
+  font-weight: 700;
+  min-width: 60px;
+}
+.bet-row span:last-child {
+  color: #ddd;
+  text-align: right;
+}
+
+/* レース場ガイドのボタン */
+.link-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+.track-link {
+  flex: 1;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  text-decoration: none;
+  padding: 8px 0;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+.track-link:hover {
+  background: var(--color-gold);
+  color: #000;
+}
+
+/* レース場ガイドの特徴リスト */
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  padding-top: 10px;
+}
+.feature-list li {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: flex-start;
+}
+.feature-list li span {
+  display: inline-block;
+  min-width: 45px;
+  color: var(--color-gold);
+  font-weight: 700;
+  font-size: 0.7rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-right: 8px;
+  text-align: center;
+  margin-top: 2px;
+}
+.track-link.disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(150, 150, 150, 0.3);
+  color: #666;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* スクロール可能なコンテナ */
+.scroll-container {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+  margin-top: 10px;
+  /* スクロールバーのカスタマイズ (WebKit系) */
+}
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+.scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 10px;
+}
+
+.mt-2 { margin-top: 20px; }

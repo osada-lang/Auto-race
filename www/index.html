@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Auto Race Roulette (Premium)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Noto+Serif+JP:wght@700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- 背景演出用レイヤー -->
+  <div class="bg-effect"></div>
+  <div id="white-flash" class="white-flash hidden"></div>
+  <div id="app" class="app-container">
+
+    <!-- 画面0: ホームメニュー -->
+    <div id="screen-0" class="screen active">
+      <div class="hero-image-container">
+        <img src="assets/images/hero.png" class="hero-image" alt="Auto Race">
+      </div>
+      <p class="catchphrase">勝利への最短ルート</p>
+      <h1 class="flash-title jp-title" style="line-height: 1.1; font-size: 2.0rem; margin-top: 10px;">
+        <span style="display: block;">オートレース</span>
+        <span style="display: block;">完全初心者向け</span>
+        <span style="display: block;">入門アプリ</span>
+      </h1>
+      <p class="subtitle">バイク好きのあなたに、車券の基本とサポートを</p>
+      
+      <div class="button-group vertical">
+        <button class="btn-gorgeous" onclick="openInfo()" style="width: 100%; max-width: 320px;">
+          <span class="btn-sub">初心者はまずこちら</span>
+          <span class="btn-text">オートレースの魅力</span>
+        </button>
+        <button class="btn-gorgeous" onclick="openTracks()" style="width: 100%; max-width: 320px;">
+          <span class="btn-sub">近くの開催場を探す</span>
+          <span class="btn-text">全国レース場ガイド</span>
+        </button>
+        <button class="btn-gorgeous" onclick="openRoulette()" style="width: 100%; max-width: 320px;">
+          <span class="btn-sub">予想が苦手な方はこちら</span>
+          <span class="btn-text">一撃必中！<br>車券ルーレット！</span>
+        </button>
+        <a href="https://www.winticket.jp/autorace/" target="_blank" class="btn-gorgeous rainbow-btn" style="width: 100%; max-width: 320px; text-decoration: none; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <span class="btn-sub" style="color: rgba(0,0,0,0.7);">公式アプリで投票する</span>
+          <span class="btn-text">WINTICKET で投票</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 画面1: 台数選択 -->
+    <div id="screen-1" class="screen hidden">
+      <h1 class="flash-title jp-title" style="line-height: 1.3; font-size: 2.2rem;">一撃必中！<br>車券ルーレット！</h1>
+      <p class="subtitle">出走台数を選択してください</p>
+      <div class="button-group">
+        <button class="btn-gorgeous" onclick="selectBikes(7)">7台</button>
+        <button class="btn-gorgeous" onclick="selectBikes(8)">8台</button>
+      </div>
+      <button class="btn-back" onclick="goHome()">ホームに戻る</button>
+    </div>
+
+    <!-- 画面2: 券種選択 -->
+    <div id="screen-2" class="screen hidden" style="justify-content: flex-start; padding-top: 30px;">
+      <h1 class="flash-title jp-title">券種選択</h1>
+      <p class="subtitle" style="margin-bottom: 10px;">運命の券種を選択してください</p>
+      
+      <div class="scroll-container">
+        <!-- 単勝 -->
+        <div class="bet-card" onclick="selectBetType('単勝')">
+          <div class="bet-card-header">
+             <span>単勝</span>
+             <span class="badge">堅実<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>確率が一番高く堅実。まずはここから！配当は低め。</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>選んだ1台をとにかく応援！一番シンプルで熱くなれる！</p>
+          </div>
+        </div>
+
+        <!-- ワイド -->
+        <div class="bet-card" onclick="selectBetType('ワイド')">
+          <div class="bet-card-header">
+             <span>ワイド</span>
+             <span class="badge">初心者◎<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>3着までの2台を当てる、最も的中させやすい券種の一つ。</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>「とにかく当てたい！」という方に最適。2台の順位は関係ありません。</p>
+          </div>
+        </div>
+
+        <!-- 2連複 -->
+        <div class="bet-card" onclick="selectBetType('2連複')">
+          <div class="bet-card-header">
+             <span>2連複</span>
+             <span class="badge">バランス<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>当てやすさと配当のバランスが最も良い王道ルール。</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>選んだ2台が順位関係なく1・2着に入ればOK！チームとして2台を応援できる！</p>
+          </div>
+        </div>
+
+        <!-- 2連単 -->
+        <div class="bet-card" onclick="selectBetType('2連単')">
+          <div class="bet-card-header">
+             <span>2連単</span>
+             <span class="badge">配当妙味<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>順番まで全て当てるため配当が高め！中穴狙いに最適。</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>「アイツが1着でコイツが2着だ！」というドラマチックな完全予想が決まった時の快感が最高！</p>
+          </div>
+        </div>
+
+        <!-- 3連複 -->
+        <div class="bet-card" onclick="selectBetType('3連複')">
+          <div class="bet-card-header">
+             <span>3連複</span>
+             <span class="badge">ワクワク<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>高配当を狙いつつ、3台の順位は不問なので適度なリスクヘッジにもなる。</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>選んだ3台がすべて3着以内に入ればOK！3台が先頭集団を固めて走っている時のテンションはMAX！</p>
+          </div>
+        </div>
+
+        <!-- 3連単 -->
+        <div class="bet-card" onclick="selectBetType('3連単')">
+          <div class="bet-card-header">
+             <span>3連単</span>
+             <span class="badge">一撃必殺<span class="stars">★★★</span></span>
+          </div>
+          <div class="bet-card-body">
+            <p class="desc-text"><span class="highlight-blue">【期待値】</span>最も当てるのが難しい分、高配当（万車券）が飛び出すロマン枠！</p>
+            <p class="desc-text"><span class="highlight-red">【レース】</span>1〜3着を順番通りにドンピシャで当てる、究極のスリルと奇跡を味わいたいギャンブラー向け！</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-back mt-2" onclick="goBack(1)" style="margin-bottom: 20px;">戻る</button>
+    </div>
+
+    <!-- 画面3: ルーレット＆結果 -->
+    <div id="screen-3" class="screen hidden">
+
+      <div id="roulette-mode" class="roulette-container">
+        <!-- パチンコ風のド派手な演出エリア -->
+        <div class="fever-zone">
+          <h1 class="fever-text" id="fever-text">激熱</h1>
+        </div>
+        <div class="bike-animation-area">
+          <img src="bike_gold_v2.png" class="bike-img bike-1" alt="gold">
+          <img src="bike_red_v2.png" class="bike-img bike-2" alt="red">
+          <img src="bike_cyber_v3.png" class="bike-img bike-3" alt="cyber">
+        </div>
+        <div class="slot-zone">
+          <div class="slot-numbers" id="slot-numbers">
+            <span class="slot">?</span>
+          </div>
+        </div>
+        <div class="action-zone">
+          <button id="push-btn" class="push-btn-effect hidden" onclick="revealResult()">つかみ取れ！！</button>
+        </div>
+      </div>
+
+      <div id="result-mode" class="result-container hidden">
+        <h2 class="result-title">予想確定</h2>
+        <div class="result-box-wrapper">
+          <div class="result-box" id="result-box">
+            <!-- 結果がここに表示される -->
+          </div>
+        </div>
+        <div class="disclaimer-wrapper">
+          <p class="result-message hidden" id="result-message">
+            ※当ルーレットの結果はAI予想ではなく、完全なランダム抽選です。宝くじ感覚でお楽しみいただける方のみ、自己責任で車券購入へお進みください。
+          </p>
+        </div>
+        <div class="result-actions">
+          <button class="btn-gorgeous rainbow-btn hidden" id="retry-btn" onclick="retry()">もう一度</button>
+          <button class="btn-back mt-2 hidden" id="start-btn" onclick="goBack(0)">最初から</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 画面: オートレースの魅力 -->
+    <div id="screen-info" class="screen hidden" style="justify-content: flex-start; padding-top: 30px;">
+      <h1 class="flash-title jp-title">オートレースの魅力</h1>
+      <div class="scroll-container">
+        <!-- 魅力解説 -->
+        <div class="info-card">
+          <h3>1. 究極のスピードバトル</h3>
+          <p>時速150km、ブレーキなし。極限の緊張感と爆音が、あなたの本能を呼び覚まします。</p>
+        </div>
+
+        <div class="info-card">
+          <h3>2. 身近で奥深い「バイク」の世界</h3>
+          <p>街中でよく見かけるバイクが、一変して猛獣のようにサーキットを駆ける。最も身近な乗り物だからこそ、その凄みがダイレクトに伝わります。</p>
+        </div>
+
+        <div class="info-card">
+          <h3>3. 週末の目的地に。グルメ・家族・ツーリング</h3>
+          <p>ご当地B級グルメやキッズスペースも充実。ツーリングの休憩所や家族でのレジャー先としても、オートレース場は最高のスポットです。</p>
+        </div>
+
+        <h2 class="section-title">初心者向け！簡単予想法</h2>
+        <div class="info-card highlight">
+          <h3>試走タイムが全て！</h3>
+          <p>レース前に行われる練習走行（試走）のタイムをチェック。**「数字が小さいほど速い」**のが鉄則です。迷ったら一番速い選手から狙いましょう。</p>
+        </div>
+        <div class="info-card highlight">
+          <h3>ハンデキャップの魔力</h3>
+          <p>強い選手は後ろ（10m〜）からスタート。最後尾から全車を抜き去る「大外一気」がオートレース最大の興奮ポイントです。</p>
+        </div>
+
+        <h2 class="section-title">車券の種類を知ろう</h2>
+        <div class="bet-guide-table">
+          <div class="bet-row"><span>単勝</span><span>1着を当てる (難度：★)</span></div>
+          <div class="bet-row"><span>ワイド</span><span>3着内の2台を当てる (難度：★)</span></div>
+          <div class="bet-row"><span>2連複</span><span>Top2を順不同で (難度：★★)</span></div>
+          <div class="bet-row"><span>2連単</span><span>1・2着を正確に (難度：★★★)</span></div>
+          <div class="bet-row"><span>3連複</span><span>Top3を順不同で (難度：★★★)</span></div>
+          <div class="bet-row"><span>3連単</span><span>1・2・3着を正確に (難度：MAX)</span></div>
+        </div>
+      </div>
+      <button class="btn-back mt-2" onclick="goHome()" style="margin-bottom: 20px;">戻る</button>
+    </div>
+
+    <!-- 画面: 全国のレース場ガイド -->
+    <div id="screen-tracks" class="screen hidden" style="justify-content: flex-start; padding-top: 30px;">
+      <h1 class="flash-title jp-title" style="font-size: 2rem;">全国レース場ガイド</h1>
+      <div class="scroll-container" id="tracks-list">
+          <div class="bet-card track-card">
+            <div class="bet-card-header"><span>川口オート (埼玉県)</span></div>
+            <div class="bet-card-body">
+              <p class="desc-text">「オートのメッカ」。全国一の売上を誇る聖地。</p>
+              <ul class="feature-list">
+                <li><span>施設</span>大型ビジョンと活気あるスタンド</li>
+                <li><span>グルメ</span>串ホルモン、揚げ物などの名物B級グルメ</li>
+              </ul>
+              <div class="link-btns">
+                <a href="https://www.kawaguchiauto.jp/facilities/facility/" target="_blank" class="track-link">場内案内</a>
+                <a href="https://www.kawaguchiauto.jp/facilities/food/" target="_blank" class="track-link">グルメ</a>
+              </div>
+            </div>
+          </div>
+          <div class="bet-card track-card">
+            <div class="bet-card-header"><span>伊勢崎オート (群馬県)</span></div>
+            <div class="bet-card-body">
+              <p class="desc-text">ナイター開催発祥の地。華やかな夜のレースが魅力。</p>
+              <ul class="feature-list">
+                <li><span>施設</span>日本一の照明を誇る「ナイター設備」</li>
+                <li><span>グルメ</span>名物「焼きまんじゅう」や本格定食</li>
+              </ul>
+              <div class="link-btns">
+                <a href="https://isesaki-auto.jp/guide/" target="_blank" class="track-link">場内案内</a>
+                <a href="https://isesaki-auto.jp/guide/gourmet/" target="_blank" class="track-link">グルメ</a>
+              </div>
+            </div>
+          </div>
+          <div class="bet-card track-card">
+            <div class="bet-card-header"><span>浜松オート (静岡県)</span></div>
+            <div class="bet-card-body">
+              <p class="desc-text">バイクのふるさと浜松。テクニカルな展開が多い。</p>
+              <ul class="feature-list">
+                <li><span>施設</span>選手とバイクが目の前の「グリーンスタンド」</li>
+                <li><span>グルメ</span>「浜松餃子」や「うなぎ」の豪華グルメも</li>
+              </ul>
+              <div class="link-btns">
+                <a href="https://www.hamamatsuauto.jp/facility/" target="_blank" class="track-link">場内案内</a>
+                <a href="https://www.hamamatsuauto.jp/gourmet/" target="_blank" class="track-link">グルメ</a>
+              </div>
+            </div>
+          </div>
+          <div class="bet-card track-card">
+            <div class="bet-card-header"><span>飯塚オート (福岡県)</span></div>
+            <div class="bet-card-body">
+              <p class="desc-text">九州唯一の場。エンジン音が最も響く大迫力。</p>
+              <ul class="feature-list">
+                <li><span>施設</span>歴史ある「重厚なスタンド」が魅力</li>
+                <li><span>グルメ</span>筑豊名物「ホルモン定食」がスタミナ抜群</li>
+              </ul>
+              <div class="link-btns">
+                <a href="https://www.iizuka-auto.jp/facilities/" target="_blank" class="track-link">場内案内</a>
+                <a href="https://www.iizuka-auto.jp/information/1014.html" target="_blank" class="track-link">グルメ</a>
+              </div>
+            </div>
+          </div>
+          <div class="bet-card track-card">
+            <div class="bet-card-header"><span>山陽オート (山口県)</span></div>
+            <div class="bet-card-body">
+              <p class="desc-text">瀬戸内海を望む好立地。ミッドナイトも注力。</p>
+              <ul class="feature-list">
+                <li><span>施設</span>潮風を感じる「開放的なバンク」</li>
+                <li><span>グルメ</span>名物は伝説の「老舗食堂」ホルモンとラーメン</li>
+              </ul>
+              <div class="link-btns">
+                <a href="https://sanyoauto.jp/facilities/" target="_blank" class="track-link">場内案内</a>
+                <a class="track-link disabled">グルメ HP なし</a>
+              </div>
+            </div>
+          </div>
+      </div>
+      <button class="btn-back mt-2" onclick="goHome()" style="margin-bottom: 20px;">戻る</button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
