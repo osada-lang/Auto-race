@@ -205,7 +205,9 @@ const state = {
   bikes: 0,
   betType: '',
   shuffleInterval: null,
-  shuffleCount: 0
+  shuffleCount: 0,
+  currentVersion: '1.0.0',
+  latestVersion: '1.0.0'
 };
 
 // 要素の取得 (Lazy getter を使用して初期化ミスを防ぐ)
@@ -584,3 +586,44 @@ function retry() {
   vibrate('light');
   startRoulette();
 }
+
+/** --- Brand Splash & Update Check --- **/
+function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function showBrandSplash() {
+  const splash = document.getElementById('brand-splash');
+  const logo = document.getElementById('brand-logo');
+  if (!splash || !logo) return;
+
+  await wait(100);
+  logo.classList.add('fade-in');
+  await wait(1500); // 1.0s fade-in + 0.5s static
+  logo.classList.remove('fade-in');
+  await wait(1000); // 1.0s fade-out
+  splash.classList.add('fade-out');
+  await wait(1000); // 1.0s splash fade-out
+  splash.remove();
+}
+
+function checkUpdate() {
+  if (state.currentVersion !== state.latestVersion) {
+    document.getElementById('update-overlay').classList.remove('hidden');
+  }
+}
+
+// アプリ起動時の初期化
+document.addEventListener('DOMContentLoaded', () => {
+  showBrandSplash();
+  setTimeout(checkUpdate, 2000);
+
+  document.getElementById('update-now-btn').onclick = () => {
+    const url = /iPhone|iPad|iPod/.test(navigator.userAgent)
+      ? 'https://apps.apple.com/app/id6761675839'
+      : 'https://play.google.com/store/apps/details?id=com.jirachi.autorace';
+    window.open(url, '_blank');
+  };
+
+  document.getElementById('update-later-btn').onclick = () => {
+    document.getElementById('update-overlay').classList.add('hidden');
+  };
+});
