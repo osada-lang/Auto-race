@@ -595,13 +595,33 @@ async function showBrandSplash() {
   const logo = document.getElementById('brand-logo');
   if (!splash || !logo) return;
 
+  // ロゴのフェードイン・アウト演出
   await wait(100);
   logo.classList.add('fade-in');
   await wait(1500); // 1.0s fade-in + 0.5s static
   logo.classList.remove('fade-in');
   await wait(1000); // 1.0s fade-out
+
+  // 「タップしてスタート」テキストを表示
+  const tapText = document.createElement('p');
+  tapText.textContent = 'タップしてスタート';
+  tapText.style.cssText = 'color:#999;font-size:1rem;position:absolute;bottom:25%;left:50%;transform:translateX(-50%);animation:fadeInTap 1s ease infinite alternate;';
+  splash.appendChild(tapText);
+
+  // ユーザーのタップを待ってからホーム画面へ遷移
+  await new Promise(resolve => {
+    const onTap = () => {
+      splash.removeEventListener('click', onTap);
+      splash.removeEventListener('touchend', onTap);
+      resolve();
+    };
+    splash.addEventListener('click', onTap);
+    splash.addEventListener('touchend', onTap);
+  });
+
+  // スプラッシュをフェードアウトして削除
   splash.classList.add('fade-out');
-  await wait(1000); // 1.0s splash fade-out
+  await wait(1000);
   splash.remove();
 }
 
