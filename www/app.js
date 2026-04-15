@@ -610,16 +610,19 @@ async function showBrandSplash() {
 
   // ユーザーのタップを待ってからホーム画面へ遷移
   await new Promise(resolve => {
-    const onTap = () => {
-      splash.removeEventListener('click', onTap);
-      splash.removeEventListener('touchend', onTap);
+    const onTap = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      splash.removeEventListener('click', onTap, true);
+      splash.removeEventListener('touchend', onTap, true);
       resolve();
     };
-    splash.addEventListener('click', onTap);
-    splash.addEventListener('touchend', onTap);
+    splash.addEventListener('click', onTap, true);
+    splash.addEventListener('touchend', onTap, true);
   });
 
-  // スプラッシュをフェードアウトして削除
+  // スプラッシュをフェードアウトして削除（pointer-eventsで下層への伝播を完全にブロック）
+  splash.style.pointerEvents = 'none';
   splash.classList.add('fade-out');
   await wait(1000);
   splash.remove();
